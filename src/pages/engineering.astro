@@ -1,0 +1,19 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Chat } from "../components/Chat";
+import { ENG_LEADER_CURRICULUM } from "../lib/eng-leader-curriculum";
+
+export const prerender = false;
+---
+
+<Layout
+  title="System Design — Engineering Leaders"
+  description="Advanced system design for heads of engineering, senior engineering managers, and VPs."
+>
+  <Chat
+    client:load
+    persona="eng-leader"
+    curriculum={ENG_LEADER_CURRICULUM}
+    title="System Design — Engineering Leaders"
+  />
+</Layout>

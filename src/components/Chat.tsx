@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Message } from "./Message";
 import { ProgressSidebar } from "./ProgressSidebar";
-import type { ChatMessage, ApiMessage, ProgressState } from "../lib/types";
+import type { ChatMessage, ApiMessage, CurriculumStage, Persona, ProgressState } from "../lib/types";
 import {
   loadMessages,
   saveMessages,
@@ -13,13 +13,19 @@ import {
   INITIAL_MESSAGES,
 } from "../lib/progress";
 
+interface Props {
+  persona: Persona;
+  curriculum: CurriculumStage[];
+  title: string;
+}
+
 let idCounter = 0;
 function genId() {
   return `msg-${Date.now()}-${++idCounter}`;
 }
 
-export function Chat() {
-  const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
+export function Chat({ persona, curriculum, title }: Props) {
+  const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES[persona]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [progress, setProgress] = useState<ProgressState>({});
@@ -30,9 +36,9 @@ export function Chat() {
 
   // Load persisted state on mount
   useEffect(() => {
-    setMessages(loadMessages());
-    setProgress(loadProgress());
-  }, []);
+    setMessages(loadMessages(persona));
+    setProgress(loadProgress(persona));
+  }, [persona]);
 
   // Persist messages whenever they change (skip initial render)
   const isFirstRender = useRef(true);
@@ -41,8 +47,8 @@ export function Chat() {
       isFirstRender.current = false;
       return;
     }
-    saveMessages(messages);
-  }, [messages]);
+    saveMessages(messages, persona);
+  }, [messages, persona]);
 
   // Scroll to bottom whenever messages update
   useEffect(() => {
@@ -65,11 +71,11 @@ export function Chat() {
         tags.forEach(({ stage, topic }) => {
           next[`stage${stage}-${topic}`] = true;
         });
-        saveProgress(next);
+        saveProgress(next, persona);
         return next;
       });
     },
-    []
+    [persona]
   );
 
   async function sendMessage(userText: string) {
@@ -108,7 +114,7 @@ export function Chat() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: apiMessages }),
+        body: JSON.stringify({ messages: apiMessages, persona }),
       });
 
       if (!response.ok) {
@@ -177,8 +183,8 @@ export function Chat() {
   }
 
   function handleNewChat() {
-    clearMessages();
-    setMessages(INITIAL_MESSAGES);
+    clearMessages(persona);
+    setMessages(INITIAL_MESSAGES[persona]);
     setError(null);
     // Keep progress — it's cumulative across sessions
   }
@@ -187,9 +193,7 @@ export function Chat() {
     <div className="flex h-screen flex-col bg-white">
       {/* Header */}
       <header className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 px-6 py-4">
-        <span className="font-semibold tracking-tight text-gray-900">
-          System Design Companion
-        </span>
+        <span className="font-semibold tracking-tight text-gray-900">{title}</span>
         <button
           onClick={handleNewChat}
           className="text-sm text-gray-400 transition hover:text-gray-900"
@@ -257,7 +261,7 @@ export function Chat() {
         </div>
 
         {/* Progress sidebar */}
-        <ProgressSidebar progress={progress} />
+        <ProgressSidebar progress={progress} curriculum={curriculum} />
       </div>
     </div>
   );
