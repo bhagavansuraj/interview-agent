@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { SYSTEM_PROMPT } from "../../lib/system-prompt";
-import type { ApiMessage } from "../../lib/types";
+import { ENG_LEADER_SYSTEM_PROMPT } from "../../lib/eng-leader-system-prompt";
+import type { ApiMessage, Persona } from "../../lib/types";
 
 export const prerender = false;
 
@@ -23,9 +24,11 @@ export const POST: APIRoute = async (context) => {
   }
 
   let messages: ApiMessage[];
+  let persona: Persona = "pm";
   try {
-    const body = (await context.request.json()) as { messages: ApiMessage[] };
+    const body = (await context.request.json()) as { messages: ApiMessage[]; persona?: Persona };
     messages = body.messages;
+    if (body.persona === "eng-leader") persona = "eng-leader";
   } catch {
     return new Response(JSON.stringify({ error: "Invalid request body" }), {
       status: 400,
@@ -46,7 +49,7 @@ export const POST: APIRoute = async (context) => {
         model: "claude-sonnet-4-6",
         max_tokens: 1024,
         stream: true,
-        system: SYSTEM_PROMPT,
+        system: persona === "eng-leader" ? ENG_LEADER_SYSTEM_PROMPT : SYSTEM_PROMPT,
         messages,
       }),
     }

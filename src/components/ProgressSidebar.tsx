@@ -1,14 +1,15 @@
-import { CURRICULUM, TOTAL_TOPICS } from "../lib/curriculum";
-import type { ProgressState } from "../lib/types";
+import type { CurriculumStage, ProgressState } from "../lib/types";
 
 interface Props {
   progress: ProgressState;
+  curriculum: CurriculumStage[];
 }
 
-export function ProgressSidebar({ progress }: Props) {
+export function ProgressSidebar({ progress, curriculum }: Props) {
+  const totalTopics = curriculum.reduce((sum, s) => sum + s.topics.length, 0);
   const completedCount = Object.values(progress).filter(Boolean).length;
   const percentage =
-    TOTAL_TOPICS > 0 ? Math.round((completedCount / TOTAL_TOPICS) * 100) : 0;
+    totalTopics > 0 ? Math.round((completedCount / totalTopics) * 100) : 0;
 
   return (
     <aside className="flex w-64 flex-shrink-0 flex-col border-l border-gray-200 bg-gray-50">
@@ -20,7 +21,7 @@ export function ProgressSidebar({ progress }: Props) {
         <div className="mt-3">
           <div className="mb-1 flex items-baseline justify-between">
             <span className="text-sm text-gray-600">
-              {completedCount} of {TOTAL_TOPICS} topics
+              {completedCount} of {totalTopics} topics
             </span>
             <span className="text-sm font-semibold text-gray-900">
               {percentage}%
@@ -38,7 +39,7 @@ export function ProgressSidebar({ progress }: Props) {
       {/* Stages */}
       <div className="flex-1 overflow-y-auto px-5 py-4">
         <div className="space-y-5">
-          {CURRICULUM.map((stage) => {
+          {curriculum.map((stage) => {
             const stageDone = stage.topics.filter(
               (t) => progress[`stage${stage.stage}-${t.id}`]
             ).length;

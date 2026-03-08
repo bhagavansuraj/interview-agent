@@ -1,10 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Chat } from "../components/Chat";
+import { CURRICULUM } from "../lib/curriculum";
 
 export const prerender = false;
 ---
 
-<Layout title="System Design Companion — Chat">
-  <Chat client:load />
+<Layout title="System Design Companion — Product Managers">
+  <Chat
+    client:load
+    persona="pm"
+    curriculum={CURRICULUM}
+    title="System Design Companion"
+  />
 </Layout>
