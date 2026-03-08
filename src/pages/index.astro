@@ -1,0 +1,112 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="System Design Companion"
+  description="Learn system design the way product managers actually need to — no CS degree required."
+>
+  <!-- NAV -->
+  <header class="border-b border-gray-200">
+    <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-5">
+      <span class="text-sm font-semibold tracking-tight text-gray-900">
+        System Design Companion
+      </span>
+      <a
+        href="/chat"
+        class="rounded-full bg-gray-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-gray-700"
+      >
+        Start learning
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="mx-auto max-w-4xl px-6 py-24">
+    <p class="mb-6 text-sm font-semibold uppercase tracking-widest text-gray-400">
+      For product managers
+    </p>
+    <h1
+      class="mb-8 max-w-2xl text-5xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-6xl"
+    >
+      System design, explained for PMs.
+    </h1>
+    <p class="mb-10 max-w-lg text-lg text-gray-500">
+      A conversational AI tutor that teaches you how software systems work —
+      using plain English, real-world analogies, and zero assumed technical
+      background.
+    </p>
+    <a
+      href="/chat"
+      class="inline-block rounded-full bg-gray-900 px-8 py-4 text-base font-semibold text-white transition hover:bg-gray-700"
+    >
+      Start the conversation
+    </a>
+  </section>
+
+  <!-- WHAT YOU'LL LEARN -->
+  <section class="border-t border-gray-200">
+    <div class="mx-auto max-w-4xl px-6 py-20">
+      <h2 class="mb-12 text-sm font-semibold uppercase tracking-widest text-gray-400">
+        What you'll learn
+      </h2>
+      <div class="grid gap-px bg-gray-200 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          [
+            {
+              n: "01",
+              title: "The big picture",
+              detail:
+                "What systems are, how clients and servers work, and why any of this matters for your role.",
+            },
+            {
+              n: "02",
+              title: "Core building blocks",
+              detail:
+                "Databases, APIs, caching, and CDNs — explained through analogies you'll actually remember.",
+            },
+            {
+              n: "03",
+              title: "Scaling up",
+              detail:
+                "What happens when a million users hit your product and how engineers design for it.",
+            },
+            {
+              n: "04",
+              title: "Real-world design",
+              detail:
+                "Walk through how real products like URL shorteners, social feeds, and notifications are built.",
+            },
+            {
+              n: "05",
+              title: "Interview ready",
+              detail:
+                "Structure your thinking, ask the right clarifying questions, and discuss trade-offs confidently.",
+            },
+            {
+              n: "06",
+              title: "Progress tracking",
+              detail:
+                "Your roadmap is always visible. Pick up exactly where you left off, any time.",
+            },
+          ].map(({ n, title, detail }) => (
+            <div class="bg-white p-8">
+              <p class="mb-4 text-xs font-semibold text-gray-400">{n}</p>
+              <p class="mb-2 font-semibold text-gray-900">{title}</p>
+              <p class="text-sm leading-relaxed text-gray-500">{detail}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-gray-200">
+    <div class="mx-auto max-w-4xl px-6 py-8">
+      <p class="text-sm text-gray-400">
+        &copy; {new Date().getFullYear()} System Design Companion
+      </p>
+    </div>
+  </footer>
+</Layout>
